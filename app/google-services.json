@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "478871531964",
+    "project_id": "video-meeting-81139",
+    "storage_bucket": "video-meeting-81139.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478871531964:android:0302692718483dcec4bbb9",
+        "android_client_info": {
+          "package_name": "com.anu.firebasevideocallingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478871531964-ptj4c7g6quimdkqklrnautv1ij7lq4n2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-BwrC_cx3P4n9NnlHtjSSDMN3DcJhkQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478871531964-ptj4c7g6quimdkqklrnautv1ij7lq4n2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
