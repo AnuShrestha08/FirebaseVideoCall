@@ -3,6 +3,7 @@ package com.anu.firebasevideocallingapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.TextView
 //import android.widget.Toast
 import com.anu.firebasevideocallingapp.R
@@ -10,6 +11,8 @@ import com.anu.firebasevideocallingapp.R
 
 class SignInActivity : AppCompatActivity() {
 
+    private lateinit var inputEmail :EditText
+    private lateinit var inputPassword :EditText
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
