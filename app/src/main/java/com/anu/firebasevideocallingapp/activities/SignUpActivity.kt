@@ -86,6 +86,8 @@ class SignUpActivity : AppCompatActivity() {
             .add(user)
             .addOnSuccessListener { documentReference ->
                 preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true)
+                preferenceManager.putString(Constants.KEY_USERS_ID,
+                    documentReference.id)
                 preferenceManager.putString(Constants.KEY_FIRST_NAME,inputFirstName.text.toString())
                 preferenceManager.putString(Constants.KEY_LAST_NAME,inputLastName.text.toString())
                 preferenceManager.putString(Constants.KEY_EMAIL,inputEmail.text.toString())

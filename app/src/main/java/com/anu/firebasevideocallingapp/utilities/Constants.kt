@@ -10,6 +10,12 @@ class Constants {
         const val KEY_PASSWORD = "password"
         const val KEY_PREFERENCE_NAME = "videoMeetingPreference"
         const val KEY_IS_SIGNED_IN = "isSignedIn"
+        const val KEY_USERS_ID = "users_id"
+        const val KEY_FCM_TOKEN= "fcm_token"
+
+
+
+
     }
 
 
