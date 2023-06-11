@@ -1,5 +1,6 @@
 package com.anu.firebasevideocallingapp.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
@@ -7,6 +8,7 @@ import android.widget.Toast
 import com.anu.firebasevideocallingapp.R
 import com.anu.firebasevideocallingapp.utilities.Constants
 import com.anu.firebasevideocallingapp.utilities.PreferenceManager
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 
@@ -35,6 +37,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+        var textSignOut = findViewById<TextView>(R.id.textSignOut)
+        textSignOut.setOnClickListener {
+            signOut()
+        }
+
     }
     private fun sendFCMTokenToDatabase(token: String) {
         val database = FirebaseFirestore.getInstance()
@@ -48,5 +55,25 @@ class MainActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(this@MainActivity, "Unable to send token.${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun signOut(){
+        Toast.makeText(this@MainActivity, "Signing Out...", Toast.LENGTH_LONG).show()
+        val database = FirebaseFirestore.getInstance()
+        val documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
+            .document(preferenceManager.getString(Constants.KEY_USERS_ID)?: "")
+            val updates =hashMapOf<String, Any>(Constants.KEY_FCM_TOKEN to FieldValue.delete())
+        documentReference.update(updates)
+            .addOnSuccessListener {
+                preferenceManager.clearPreferences()
+                startActivity(Intent(applicationContext,SignInActivity::class.java))
+                finish()
+            }
+            .addOnFailureListener { e->
+                Toast.makeText(this@MainActivity, "Unable to sign out",Toast.LENGTH_SHORT).show()
+            }
+
+
+
     }
 }
