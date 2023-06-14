@@ -3,9 +3,14 @@ package com.anu.firebasevideocallingapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.anu.firebasevideocallingapp.R
+import com.anu.firebasevideocallingapp.adapters.UsersAdapters
+import com.anu.firebasevideocallingapp.models.User
 import com.anu.firebasevideocallingapp.utilities.Constants
 import com.anu.firebasevideocallingapp.utilities.PreferenceManager
 import com.google.firebase.firestore.FieldValue
@@ -15,6 +20,12 @@ import com.google.firebase.messaging.FirebaseMessaging
 class MainActivity : AppCompatActivity() {
 
     private lateinit var preferenceManager: PreferenceManager
+    private lateinit var users: List<User>
+    private lateinit var usersAdapters: UsersAdapters
+    private lateinit var textErrorMessage: TextView
+    private lateinit var usersProgressBar: ProgressBar
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,7 +53,17 @@ class MainActivity : AppCompatActivity() {
             signOut()
         }
 
+        var usersRecyclerView:RecyclerView=findViewById(R.id.usersRecyclerview)
+        textErrorMessage = findViewById(R.id.textErrorMessage)
+        usersProgressBar = findViewById(R.id.usersProgressBar)
+        users = ArrayList()
+        usersAdapters = UsersAdapters(users)
+        usersRecyclerView.adapter=usersAdapters
+
     }
+
+
+
     private fun sendFCMTokenToDatabase(token: String) {
         val database = FirebaseFirestore.getInstance()
         val documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
