@@ -7,9 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.anu.firebasevideocallingapp.R
+import com.anu.firebasevideocallingapp.listeners.UsersListener
 import com.anu.firebasevideocallingapp.models.User
 
-class UsersAdapters(private val users:List<User>) : RecyclerView.Adapter<UsersAdapters.ViewHolder>(){
+class UsersAdapters(private val users:List<User>, private val usersListener: UsersListener) : RecyclerView.Adapter<UsersAdapters.ViewHolder>(){
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val textFirstChar : TextView = itemView.findViewById(R.id.textFirstChar)
@@ -22,6 +23,14 @@ class UsersAdapters(private val users:List<User>) : RecyclerView.Adapter<UsersAd
             textFirstChar.text=user.firstName.substring(0,1)
             textUsername.text="${user.firstName} ${user.LastName}"
             textEmail.text = user.email
+
+            imageAudioMeeting.setOnClickListener {
+                usersListener.initiateAudioMeeting(user)
+            }
+
+            imageVideoMeeting.setOnClickListener {
+                usersListener.initiateVideoMeeting(user)
+            }
         }
     }
 
