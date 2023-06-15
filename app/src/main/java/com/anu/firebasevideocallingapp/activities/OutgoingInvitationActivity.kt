@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.anu.firebasevideocallingapp.R
 import com.anu.firebasevideocallingapp.models.User
+import com.anu.firebasevideocallingapp.utilities.PreferenceManager
 
 class OutgoingInvitationActivity : AppCompatActivity() {
 
@@ -14,6 +15,9 @@ class OutgoingInvitationActivity : AppCompatActivity() {
     private lateinit var textFirstChar:TextView
     private lateinit var textUsername:TextView
     private lateinit var textEmail:TextView
+
+    private lateinit var preferenceManager : PreferenceManager
+    private var inviterToken:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,5 +47,16 @@ class OutgoingInvitationActivity : AppCompatActivity() {
         imageStopInvitation.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+
+        preferenceManager = PreferenceManager(applicationContext)
+//        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener{task->
+//            if(task.isSuccessful && task.result != null){
+//                inviterToken = task.result?.token
+//
+//            }
+//
+//        }
+
     }
+
 }
