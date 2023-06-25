@@ -13,6 +13,7 @@ class Constants {
         const val KEY_USERS_ID = "users_id"
         const val KEY_FCM_TOKEN= "fcm_token"
 
+
         const val REMOTE_MSG_AUTHORIZATION = "Authorization"
         const val REMOTE_MSG_CONTENT_TYPE = "Content-type"
 
@@ -23,6 +24,11 @@ class Constants {
         const val REMOTE_MSG_INVITER_TOKEN = "inviterToken"
         const val REMOTE_MSG_DATA = "data"
         const val REMOTE_MSG_REGISTRATION_IDS= "registration_ids"
+
+        const val REMOTE_MSG_INVITATION_RESPONSE= "invitationResponse"
+
+        const val REMOTE_MSG_INVITATION_ACCEPTED= "accepted"
+        const val REMOTE_MSG_INVITATION_REJECTED= "rejected"
 
         fun getRemoteMessageHeaders(): HashMap<String, String> {
             val headers = HashMap<String, String>()

@@ -27,6 +27,8 @@ class MessagingService : FirebaseMessagingService (){
             intent.putExtra(Constants.KEY_FIRST_NAME, remoteMessage.data[Constants.KEY_FIRST_NAME])
             intent.putExtra(Constants.KEY_LAST_NAME, remoteMessage.data[Constants.KEY_LAST_NAME])
             intent.putExtra(Constants.KEY_EMAIL, remoteMessage.data[Constants.KEY_EMAIL])
+            intent.putExtra(Constants.REMOTE_MSG_INVITER_TOKEN, remoteMessage.data[Constants.REMOTE_MSG_INVITER_TOKEN])
+            intent.putExtra(Constants.REMOTE_MSG_INVITER_TOKEN, remoteMessage.data[Constants.REMOTE_MSG_INVITER_TOKEN])
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
