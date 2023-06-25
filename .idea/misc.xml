@@ -11,7 +11,7 @@
         <entry key="app/src/main/res/layout/activity_outgoing_invitation.xml" value="0.15" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/item_container_user.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/item_container_user.xml" value="0.25" />
       </map>
     </option>
   </component>

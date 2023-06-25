@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity(), UsersListener {
         if (user.token == null || user.token.trim().isEmpty()) {
             Toast.makeText(
                 this,
-                "${user.firstName} ${user.LastName}: not available forVideo meeting",
+                "${user.firstName} ${user.LastName}: not available for Video meeting",
                 Toast.LENGTH_SHORT
             ).show()
         } else {
