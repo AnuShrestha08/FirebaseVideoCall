@@ -29,6 +29,7 @@ class Constants {
 
         const val REMOTE_MSG_INVITATION_ACCEPTED= "accepted"
         const val REMOTE_MSG_INVITATION_REJECTED= "rejected"
+        const val REMOTE_MSG_INVITATION_CANCELLED= "cancelled"
 
         fun getRemoteMessageHeaders(): HashMap<String, String> {
             val headers = HashMap<String, String>()

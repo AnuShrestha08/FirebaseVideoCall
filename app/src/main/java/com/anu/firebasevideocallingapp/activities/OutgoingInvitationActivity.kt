@@ -55,7 +55,9 @@ class OutgoingInvitationActivity : AppCompatActivity() {
 
         imageStopInvitation = findViewById(R.id.imageStopInvitation)
         imageStopInvitation.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            if(user!=null){
+                cancelInvitation(user.token)
+            }
         }
 
         preferenceManager = PreferenceManager(applicationContext)
@@ -109,20 +111,17 @@ class OutgoingInvitationActivity : AppCompatActivity() {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     if (type == Constants.REMOTE_MSG_INVITATION) {
-                        Toast.makeText(
-                            this@OutgoingInvitationActivity,
-                            "Invitation sent successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            this@OutgoingInvitationActivity,
-                            response.message(),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@OutgoingInvitationActivity, "Invitation sent successfully", Toast.LENGTH_LONG).show()
+                    } else if(type == Constants.REMOTE_MSG_INVITATION_RESPONSE){
+                        Toast.makeText(this@OutgoingInvitationActivity, "Invitation Cancelled", Toast.LENGTH_LONG).show()
                     }
                     finish()
-                }
+                }else{
+                        Toast.makeText(this@OutgoingInvitationActivity, response.message(), Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+
+
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
@@ -136,5 +135,27 @@ class OutgoingInvitationActivity : AppCompatActivity() {
         })
     }
 
+    private fun cancelInvitation(receiverToken: String) {
+        try {
+            val tokens = JSONArray().apply { put(receiverToken) }
+
+
+            val body = JSONObject().apply {
+                val data = JSONObject().apply {
+                    put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_INVITATION_RESPONSE)
+                    put(Constants.REMOTE_MSG_INVITATION_RESPONSE, Constants.REMOTE_MSG_INVITATION_CANCELLED)
+
+                }
+                put(Constants.REMOTE_MSG_DATA, data)
+                put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens)
+            }
+
+            sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_INVITATION_RESPONSE)
+
+        } catch (exception: Exception) {
+            Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+            finish()
+        }
+    }
 
 }

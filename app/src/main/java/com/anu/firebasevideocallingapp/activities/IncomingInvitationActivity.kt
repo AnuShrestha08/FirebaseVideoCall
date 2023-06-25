@@ -90,7 +90,12 @@ class IncomingInvitationActivity : AppCompatActivity() {
         ).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
-                    // Handle the successful response here
+                    if(type == Constants.REMOTE_MSG_INVITATION_ACCEPTED){
+                        Toast.makeText(this@IncomingInvitationActivity, "Invitation Accepted", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(this@IncomingInvitationActivity, "Invitation Rejected", Toast.LENGTH_SHORT).show()
+                    }
+
                 } else {
                     Toast.makeText(
                         this@IncomingInvitationActivity,
