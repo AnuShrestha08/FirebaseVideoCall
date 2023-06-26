@@ -165,6 +165,7 @@ class MainActivity : AppCompatActivity(), UsersListener {
             intent.putExtra("user",user)
             intent.putExtra("type","video")
             startActivity(intent)
+            finish()
         }
     }
 

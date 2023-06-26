@@ -115,7 +115,7 @@ class OutgoingInvitationActivity : AppCompatActivity() {
                     } else if(type == Constants.REMOTE_MSG_INVITATION_RESPONSE){
                         Toast.makeText(this@OutgoingInvitationActivity, "Invitation Cancelled", Toast.LENGTH_LONG).show()
                     }
-                    finish()
+
                 }else{
                         Toast.makeText(this@OutgoingInvitationActivity, response.message(), Toast.LENGTH_SHORT).show()
                         finish()
