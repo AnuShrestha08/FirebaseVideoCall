@@ -1,5 +1,6 @@
 package com.anu.firebasevideocallingapp.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -58,6 +59,7 @@ class OutgoingInvitationActivity : AppCompatActivity() {
             if(user!=null){
                 cancelInvitation(user.token)
             }
+            finish()
         }
 
         preferenceManager = PreferenceManager(applicationContext)
@@ -114,7 +116,7 @@ class OutgoingInvitationActivity : AppCompatActivity() {
                         Toast.makeText(this@OutgoingInvitationActivity, "Invitation sent successfully", Toast.LENGTH_LONG).show()
                     } else if(type == Constants.REMOTE_MSG_INVITATION_RESPONSE){
                         Toast.makeText(this@OutgoingInvitationActivity, "Invitation Cancelled", Toast.LENGTH_LONG).show()
-                        finish() //app nai close hunxa
+                        //finish() //app nai close hunxa
                     }
 
                 }else{
@@ -152,7 +154,9 @@ class OutgoingInvitationActivity : AppCompatActivity() {
             }
 
             sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_INVITATION_RESPONSE)
-
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
 
         } catch (exception: Exception) {
             Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
