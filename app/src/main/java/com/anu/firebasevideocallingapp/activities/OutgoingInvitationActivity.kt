@@ -114,6 +114,7 @@ class OutgoingInvitationActivity : AppCompatActivity() {
                         Toast.makeText(this@OutgoingInvitationActivity, "Invitation sent successfully", Toast.LENGTH_LONG).show()
                     } else if(type == Constants.REMOTE_MSG_INVITATION_RESPONSE){
                         Toast.makeText(this@OutgoingInvitationActivity, "Invitation Cancelled", Toast.LENGTH_LONG).show()
+                        finish() //app nai close hunxa
                     }
 
                 }else{
@@ -151,6 +152,7 @@ class OutgoingInvitationActivity : AppCompatActivity() {
             }
 
             sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_INVITATION_RESPONSE)
+
 
         } catch (exception: Exception) {
             Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
