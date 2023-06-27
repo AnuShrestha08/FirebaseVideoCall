@@ -1,11 +1,15 @@
 package com.anu.firebasevideocallingapp.activities
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.anu.firebasevideocallingapp.R
 import com.anu.firebasevideocallingapp.models.User
 import com.anu.firebasevideocallingapp.network.ApiClient
@@ -63,16 +67,16 @@ class OutgoingInvitationActivity : AppCompatActivity() {
         }
 
         preferenceManager = PreferenceManager(applicationContext)
+
         FirebaseMessaging.getInstance().token.addOnCompleteListener{ task->
             if(task.isSuccessful && task.result != null){
                 inviterToken = task.result
 
+                if (meetingType != null && user != null) {
+                    initiateMeeting(meetingType, user.token)
+                }
+
             }
-
-        }
-
-        if (meetingType != null && user != null) {
-            initiateMeeting(meetingType, user.token)
         }
 
     }
@@ -142,13 +146,12 @@ class OutgoingInvitationActivity : AppCompatActivity() {
         try {
             val tokens = JSONArray().apply { put(receiverToken) }
 
-
             val body = JSONObject().apply {
                 val data = JSONObject().apply {
                     put(Constants.REMOTE_MSG_TYPE, Constants.REMOTE_MSG_INVITATION_RESPONSE)
                     put(Constants.REMOTE_MSG_INVITATION_RESPONSE, Constants.REMOTE_MSG_INVITATION_CANCELLED)
-
                 }
+
                 put(Constants.REMOTE_MSG_DATA, data)
                 put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens)
             }
@@ -163,5 +166,31 @@ class OutgoingInvitationActivity : AppCompatActivity() {
             finish()
         }
     }
+
+    private fun invitationResponseReceiver() = object :BroadcastReceiver(){
+        override fun onReceive(context: Context, intent: Intent) {
+            val type = intent.getStringExtra(Constants.REMOTE_MSG_INVITATION_RESPONSE)
+            if(type != null){
+                if(type == Constants.REMOTE_MSG_INVITATION_ACCEPTED){
+                    Toast.makeText(context, "Invitation Accepted", Toast.LENGTH_SHORT).show()
+                }else if(type == Constants.REMOTE_MSG_INVITATION_REJECTED){
+                    Toast.makeText(context, "Invitation REJECTED", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+        }
+    }
+
+    override fun onStart(){
+        super.onStart()
+        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(invitationResponseReceiver(),
+            IntentFilter(Constants.REMOTE_MSG_INVITATION_RESPONSE))
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(invitationResponseReceiver())
+    }
+
 
 }

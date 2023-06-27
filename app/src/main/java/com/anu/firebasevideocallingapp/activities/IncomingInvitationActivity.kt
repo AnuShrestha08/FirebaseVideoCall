@@ -1,10 +1,15 @@
 package com.anu.firebasevideocallingapp.activities
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.anu.firebasevideocallingapp.R
 import com.anu.firebasevideocallingapp.network.ApiClient
 import com.anu.firebasevideocallingapp.network.ApiService
@@ -115,5 +120,29 @@ class IncomingInvitationActivity : AppCompatActivity() {
                 finish()
             }
         })
+    }
+
+    private fun invitationResponseReceiver() = object : BroadcastReceiver(){
+        override fun onReceive(context: Context, intent: Intent) {
+            val type = intent.getStringExtra(Constants.REMOTE_MSG_INVITATION_RESPONSE)
+            if(type != null){
+                if(type == Constants.REMOTE_MSG_INVITATION_CANCELLED){
+                    Toast.makeText(context, "Invitation Cancelled", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+        }
+    }
+
+    override fun onStart(){
+        super.onStart()
+        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(invitationResponseReceiver(),
+            IntentFilter(Constants.REMOTE_MSG_INVITATION_RESPONSE)
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(invitationResponseReceiver())
     }
 }

@@ -2,6 +2,7 @@ package com.anu.firebasevideocallingapp.firebase
 
 //import android.util.Log
 import android.content.Intent
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.anu.firebasevideocallingapp.activities.IncomingInvitationActivity
 import com.anu.firebasevideocallingapp.utilities.Constants
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -31,6 +32,10 @@ class MessagingService : FirebaseMessagingService (){
             intent.putExtra(Constants.REMOTE_MSG_INVITER_TOKEN, remoteMessage.data[Constants.REMOTE_MSG_INVITER_TOKEN])
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+        }else if(type == Constants.REMOTE_MSG_INVITATION_RESPONSE){
+            val intent = Intent(Constants.REMOTE_MSG_INVITATION_RESPONSE)
+            intent.putExtra(Constants.REMOTE_MSG_INVITATION_RESPONSE, remoteMessage.data[Constants.REMOTE_MSG_INVITATION_RESPONSE])
+            LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
         }
     }
 
