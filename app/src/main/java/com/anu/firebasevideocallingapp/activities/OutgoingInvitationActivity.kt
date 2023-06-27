@@ -22,6 +22,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class OutgoingInvitationActivity : AppCompatActivity() {
 
@@ -33,6 +34,7 @@ class OutgoingInvitationActivity : AppCompatActivity() {
 
     private lateinit var preferenceManager : PreferenceManager
     private var inviterToken:String? = null
+    private var meetingRoom:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,13 +95,17 @@ class OutgoingInvitationActivity : AppCompatActivity() {
                     put(Constants.KEY_LAST_NAME, preferenceManager.getString(Constants.KEY_LAST_NAME))
                     put(Constants.KEY_EMAIL, preferenceManager.getString(Constants.KEY_EMAIL))
                     put(Constants.REMOTE_MSG_INVITER_TOKEN, inviterToken)
+
+                    meetingRoom = preferenceManager.getString(Constants.KEY_USERS_ID)+"_"+
+                            UUID.randomUUID().toString().substring(0,5)
+
+                    put(Constants.REMOTE_MSG_MEETING_ROOM, meetingRoom)
                 }
                 put(Constants.REMOTE_MSG_DATA, data)
                 put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens)
             }
 
             sendRemoteMessage(body.toString(), Constants.REMOTE_MSG_INVITATION)
-
 
         } catch (exception: Exception) {
             Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
