@@ -71,7 +71,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx:24.6.1'
 
     //jitsi
-    implementation ('org.jitsi.react:jitsi-meet-sdk:2.8.2') { transitive = true }
+    //implementation ('org.jitsi.react:jitsi-meet-sdk:2.8.2') { transitive = true }
 
 
 }

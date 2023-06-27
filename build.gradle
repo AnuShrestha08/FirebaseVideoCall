@@ -4,10 +4,10 @@ buildscript {
         // Add any additional repositories if needed
         google()
         // ...
-        maven {
-            url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
-        }
-        mavenCentral()
+//        maven {
+//            url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
+//        }
+//        mavenCentral()
     }
     dependencies {
 
