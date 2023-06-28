@@ -14,6 +14,8 @@ import com.anu.firebasevideocallingapp.R
 import com.anu.firebasevideocallingapp.network.ApiClient
 import com.anu.firebasevideocallingapp.network.ApiService
 import com.anu.firebasevideocallingapp.utilities.Constants
+import org.jitsi.meet.sdk.JitsiMeetActivity
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
@@ -102,7 +104,7 @@ class IncomingInvitationActivity : AppCompatActivity() {
                             val serverURL = URL("https://meet.jit.si")
                             val conferenceOptions = JitsiMeetConferenceOptions.Builder()
                                 .setServerURL(serverURL)
-                                .setWelcomePageEnabled(false)
+                                .setFeatureFlag("welcomepage.enabled", false)
                                 .setRoom(intent.getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM))
                                 .build()
                             JitsiMeetActivity.launch(this@IncomingInvitationActivity,conferenceOptions)

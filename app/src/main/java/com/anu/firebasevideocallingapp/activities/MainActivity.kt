@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), UsersListener {
    // private lateinit var usersProgressBar: ProgressBar
    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -111,10 +110,7 @@ class MainActivity : AppCompatActivity(), UsersListener {
             }
         }
 
-
-
-
-        private fun sendFCMTokenToDatabase(token: String) {
+    private fun sendFCMTokenToDatabase(token: String) {
         val database = FirebaseFirestore.getInstance()
         val documentReference = database.collection(Constants.KEY_COLLECTION_USERS)
             .document(preferenceManager.getString(Constants.KEY_USERS_ID)?: "")

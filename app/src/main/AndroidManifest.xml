@@ -4,6 +4,8 @@
     package="com.anu.firebasevideocallingapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
 
     <application
         android:allowBackup="true"
@@ -16,6 +18,7 @@
         android:theme="@style/Theme.FirebaseVideoCallingApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".activities.OutgoingInvitationActivity"
             android:exported="false"
