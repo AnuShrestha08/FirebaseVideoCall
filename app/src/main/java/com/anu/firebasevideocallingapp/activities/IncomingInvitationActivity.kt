@@ -63,12 +63,11 @@ class IncomingInvitationActivity : AppCompatActivity() {
         }
 
 
-        }
+    }
 
     private fun sendInvitationResponse(type: String, receiverToken: String) {
         try {
             val tokens = JSONArray().apply { put(receiverToken) }
-
 
             val body = JSONObject().apply {
                 val data = JSONObject().apply {
@@ -102,20 +101,14 @@ class IncomingInvitationActivity : AppCompatActivity() {
                     }
 
                 } else {
-                    Toast.makeText(
-                        this@IncomingInvitationActivity,
-                        response.message(),
-                        Toast.LENGTH_SHORT
+                    Toast.makeText(this@IncomingInvitationActivity, response.message(), Toast.LENGTH_SHORT
                     ).show()
                 }
                 finish()
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Toast.makeText(
-                    this@IncomingInvitationActivity,
-                    t.message,
-                    Toast.LENGTH_SHORT
+                Toast.makeText(this@IncomingInvitationActivity, t.message, Toast.LENGTH_SHORT
                 ).show()
                 finish()
             }

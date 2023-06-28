@@ -4,10 +4,12 @@ buildscript {
         // Add any additional repositories if needed
         google()
         // ...
-//        maven {
-//            url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
-//        }
-//        mavenCentral()
+        jcenter()
+        mavenCentral()
+        maven {
+            url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
+        }
+
     }
     dependencies {
 
@@ -15,7 +17,10 @@ buildscript {
         classpath 'com.android.tools.build:gradle:7.0.4'
 
         // ...
+        //
     }
+
+
 }
 
 

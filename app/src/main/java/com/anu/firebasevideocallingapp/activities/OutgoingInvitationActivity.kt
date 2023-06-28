@@ -100,6 +100,7 @@ class OutgoingInvitationActivity : AppCompatActivity() {
                             UUID.randomUUID().toString().substring(0,5)
 
                     put(Constants.REMOTE_MSG_MEETING_ROOM, meetingRoom)
+
                 }
                 put(Constants.REMOTE_MSG_DATA, data)
                 put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens)
@@ -112,8 +113,6 @@ class OutgoingInvitationActivity : AppCompatActivity() {
             finish()
         }
     }
-
-
 
     private fun sendRemoteMessage(remoteMessageBody: String, type: String) {
         ApiClient.getClient().create(ApiService::class.java).sendRemoteMessage(
