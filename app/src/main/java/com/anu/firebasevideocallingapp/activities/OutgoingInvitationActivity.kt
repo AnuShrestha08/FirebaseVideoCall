@@ -17,11 +17,14 @@ import com.anu.firebasevideocallingapp.network.ApiService
 import com.anu.firebasevideocallingapp.utilities.Constants
 import com.anu.firebasevideocallingapp.utilities.PreferenceManager
 import com.google.firebase.messaging.FirebaseMessaging
+import org.jitsi.meet.sdk.JitsiMeetActivity
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.net.URL
 import java.util.*
 
 class OutgoingInvitationActivity : AppCompatActivity() {
@@ -177,7 +180,20 @@ class OutgoingInvitationActivity : AppCompatActivity() {
             val type = intent.getStringExtra(Constants.REMOTE_MSG_INVITATION_RESPONSE)
             if(type != null){
                 if(type == Constants.REMOTE_MSG_INVITATION_ACCEPTED){
-                    Toast.makeText(context, "Invitation Accepted", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "Invitation Accepted", Toast.LENGTH_SHORT).show()
+                    try{
+                        val serverURL = URL("https://meet.jit.si")
+                        val conferenceOptions = JitsiMeetConferenceOptions.Builder()
+                            .setServerURL(serverURL)
+                            .setFeatureFlag("welcomepage.enabled", false)
+                            .setRoom(meetingRoom)
+                            .build()
+                        JitsiMeetActivity.launch(this@OutgoingInvitationActivity,conferenceOptions)
+                        finish()
+                    }catch(exception:Exception ){
+                        Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
                 }else if(type == Constants.REMOTE_MSG_INVITATION_REJECTED){
                     Toast.makeText(context, "Invitation REJECTED", Toast.LENGTH_SHORT).show()
                     finish()
