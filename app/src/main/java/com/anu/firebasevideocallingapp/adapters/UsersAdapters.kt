@@ -10,7 +10,9 @@ import com.anu.firebasevideocallingapp.R
 import com.anu.firebasevideocallingapp.listeners.UsersListener
 import com.anu.firebasevideocallingapp.models.User
 
-class UsersAdapters(private val users:List<User>, private val usersListener: UsersListener) : RecyclerView.Adapter<UsersAdapters.ViewHolder>(){
+class UsersAdapters(private val users:List<User>,
+                    private val usersListener: UsersListener,
+                    private val selectedUsers:List<User>) : RecyclerView.Adapter<UsersAdapters.ViewHolder>(){
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val textFirstChar : TextView = itemView.findViewById(R.id.textFirstChar)
