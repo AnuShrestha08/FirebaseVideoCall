@@ -173,11 +173,13 @@ class MainActivity : AppCompatActivity(), UsersListener {
                 Toast.LENGTH_SHORT
             ).show()
         } else {
-            Toast.makeText(
-                this,
-                "Audio meeting with ${user.firstName} ${user.LastName}",
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(this, "Audio meeting with ${user.firstName} ${user.LastName}", Toast.LENGTH_SHORT
+//            ).show()
+            val intent = Intent(applicationContext, OutgoingInvitationActivity::class.java)
+            intent.putExtra("user",user)
+            intent.putExtra("type","audio")
+            startActivity(intent)
+            finish()
         }
     }
 }

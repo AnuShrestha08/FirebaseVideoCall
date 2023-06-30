@@ -28,15 +28,19 @@ import java.net.URL
 class IncomingInvitationActivity : AppCompatActivity() {
 
     private lateinit var imageMeetingType : ImageView
+    private var meetingType:String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_incoming_invitation)
 
         imageMeetingType = findViewById(R.id.imageMeetingType )
-        val meetingType: String? = intent.getStringExtra(Constants.REMOTE_MSG_MEETING_TYPE)
+        meetingType = intent.getStringExtra(Constants.REMOTE_MSG_MEETING_TYPE)
         if (meetingType != null) {
             if (meetingType == "video") {
                 imageMeetingType.setImageResource(R.drawable.ic_video)
+            }else{
+                imageMeetingType.setImageResource(R.drawable.ic_audio)
             }
         }
 
@@ -102,12 +106,20 @@ class IncomingInvitationActivity : AppCompatActivity() {
                         //Toast.makeText(this@IncomingInvitationActivity, "Invitation Accepted", Toast.LENGTH_SHORT).show()
                         try{
                             val serverURL = URL("https://meet.jit.si")
-                            val conferenceOptions = JitsiMeetConferenceOptions.Builder()
-                                .setServerURL(serverURL)
-                                .setFeatureFlag("welcomepage.enabled", false)
-                                .setRoom(intent.getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM))
-                                .build()
-                            JitsiMeetActivity.launch(this@IncomingInvitationActivity,conferenceOptions)
+                            val builder = JitsiMeetConferenceOptions.Builder()
+                            builder.setServerURL(serverURL)
+                            builder.setFeatureFlag("welcomepage.enabled", false)
+                            builder.setRoom(intent.getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM))
+
+                            if(meetingType == "audio"){
+                                builder.setVideoMuted(true)
+                            }
+//                            val conferenceOptions = JitsiMeetConferenceOptions.Builder()
+//                                .setServerURL(serverURL)
+//                                .setFeatureFlag("welcomepage.enabled", false)
+//                                .setRoom(intent.getStringExtra(Constants.REMOTE_MSG_MEETING_ROOM))
+//                                .build()
+                            JitsiMeetActivity.launch(this@IncomingInvitationActivity,builder.build())
                             finish()
                         }catch(exception:Exception ){
                             Toast.makeText(this@IncomingInvitationActivity, exception.message, Toast.LENGTH_SHORT).show()
