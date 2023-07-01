@@ -1,13 +1,18 @@
 package com.anu.firebasevideocallingapp.activities
 
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.View
 import android.widget.ImageView
 //import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.anu.firebasevideocallingapp.R
@@ -19,7 +24,6 @@ import com.anu.firebasevideocallingapp.utilities.PreferenceManager
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.gson.Gson
 
 
@@ -32,6 +36,8 @@ class MainActivity : AppCompatActivity(), UsersListener {
    // private lateinit var usersProgressBar: ProgressBar
    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
    private lateinit var imageConference: ImageView
+
+   private var REQUEST_CODE_BATTERY_OPTIMIZATIONS : Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +82,8 @@ class MainActivity : AppCompatActivity(), UsersListener {
         }
 
         getUsers()
+
+        checkForBatteryOptimizations()
 
     }
 
@@ -203,4 +211,32 @@ class MainActivity : AppCompatActivity(), UsersListener {
             imageConference.visibility = View.GONE
         }
     }
+
+    private fun checkForBatteryOptimizations() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+                val builder = AlertDialog.Builder(this@MainActivity)
+                builder.setTitle("Warning")
+                builder.setMessage("Battery optimization is enabled. It can interrupt running background services.")
+                builder.setPositiveButton("Disable") { dialog, _ ->
+                    val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                    startActivityForResult(intent, REQUEST_CODE_BATTERY_OPTIMIZATIONS)
+                    dialog.dismiss()
+                }
+                builder.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                builder.create().show()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == REQUEST_CODE_BATTERY_OPTIMIZATIONS){
+            checkForBatteryOptimizations()
+        }
+    }
+
 }
