@@ -5,14 +5,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.anu.firebasevideocallingapp.R
 import com.anu.firebasevideocallingapp.listeners.UsersListener
 import com.anu.firebasevideocallingapp.models.User
 
 class UsersAdapters(private val users:List<User>,
-                    private val usersListener: UsersListener,
-                    private val selectedUsers:List<User>) : RecyclerView.Adapter<UsersAdapters.ViewHolder>(){
+                    private val usersListener: UsersListener
+                    ) : RecyclerView.Adapter<UsersAdapters.ViewHolder>(){
+
+    private val selectedUsers:MutableList<User> = mutableListOf()
+    fun getSelectedUsers(): List<User>{
+        return selectedUsers
+    }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val textFirstChar : TextView = itemView.findViewById(R.id.textFirstChar)
@@ -20,6 +26,9 @@ class UsersAdapters(private val users:List<User>,
         val textEmail : TextView = itemView.findViewById(R.id.textEmail)
         val imageAudioMeeting : ImageView = itemView.findViewById(R.id.imageAudioMeeting)
         val imageVideoMeeting : ImageView = itemView.findViewById(R.id.imageVideoMeeting)
+
+        var userContainer :ConstraintLayout = itemView.findViewById(R.id.userContainer)
+        val imageSelected : ImageView = itemView.findViewById(R.id.imageSelected)
 
         fun setUserData(user:User){
             textFirstChar.text=user.firstName.substring(0,1)
@@ -33,6 +42,37 @@ class UsersAdapters(private val users:List<User>,
             imageVideoMeeting.setOnClickListener {
                 usersListener.initiateVideoMeeting(user)
             }
+
+            userContainer.setOnLongClickListener { v ->
+                if(imageSelected.visibility != View.VISIBLE){
+                    selectedUsers.add(user)
+                    imageSelected.visibility = View.VISIBLE
+                    imageVideoMeeting.visibility = View.GONE
+                    imageAudioMeeting.visibility = View.GONE
+                    usersListener.onMultipleUserAction(true)
+                }
+                true
+            }
+            userContainer.setOnClickListener {
+                if(imageSelected.visibility==View.VISIBLE){
+                    selectedUsers.remove(user)
+                    imageSelected.visibility = View.GONE
+                    imageVideoMeeting.visibility = View.VISIBLE
+                    imageAudioMeeting.visibility = View.VISIBLE
+                    if(selectedUsers.size == 0){
+                        usersListener.onMultipleUserAction(false)
+                    }
+                }else{
+                    if(selectedUsers.size > 0){
+                        selectedUsers.add(user)
+                        imageSelected.visibility = View.VISIBLE
+                        imageVideoMeeting.visibility = View.GONE
+                        imageAudioMeeting.visibility = View.GONE
+                    }
+                }
+            }
+
+
         }
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -16,7 +17,9 @@ import com.anu.firebasevideocallingapp.network.ApiClient
 import com.anu.firebasevideocallingapp.network.ApiService
 import com.anu.firebasevideocallingapp.utilities.Constants
 import com.anu.firebasevideocallingapp.utilities.PreferenceManager
+import com.google.common.reflect.TypeToken
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.json.JSONArray
@@ -26,6 +29,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.net.URL
 import java.util.*
+import kotlin.collections.ArrayList
 
 class OutgoingInvitationActivity : AppCompatActivity() {
 
@@ -39,6 +43,9 @@ class OutgoingInvitationActivity : AppCompatActivity() {
     private var inviterToken:String? = null
     private var meetingRoom:String? = null
     private var meetingType:String? = null
+
+    private var rejectionCount : Int = 0
+    private var totalReceivers : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,10 +75,18 @@ class OutgoingInvitationActivity : AppCompatActivity() {
 
         imageStopInvitation = findViewById(R.id.imageStopInvitation)
         imageStopInvitation.setOnClickListener {
-            if(user!=null){
-                cancelInvitation(user.token)
+            if (intent.getBooleanExtra("isMultiple", false)){
+                val type = object : TypeToken<ArrayList<User>>() {}.type
+                val receivers = Gson().fromJson<ArrayList<User>>(
+                    intent.getStringExtra("selectedUsers"),
+                    type
+                )
+                cancelInvitation(null, receivers)
+            }else{
+                if(user!=null){
+                    cancelInvitation(user.token, null)
+                }
             }
-            finish()
         }
 
         preferenceManager = PreferenceManager(applicationContext)
@@ -80,18 +95,48 @@ class OutgoingInvitationActivity : AppCompatActivity() {
             if(task.isSuccessful && task.result != null){
                 inviterToken = task.result
 
-                if (meetingType != null && user != null) {
-                    initiateMeeting(meetingType, user.token)
+                if (meetingType != null) {
+                    if (intent.getBooleanExtra("isMultiple", false)) {
+                        val type = object : TypeToken<ArrayList<User>>() {}.type
+                        val receivers = Gson().fromJson<ArrayList<User>>(
+                            intent.getStringExtra("selectedUsers"),
+                            type
+                        )
+                        if(receivers != null){
+                            totalReceivers = receivers.size
+                            }
+                        initiateMeeting(meetingType, null, receivers)
+                    } else {
+                        if (user != null) {
+                            totalReceivers = 1
+                            initiateMeeting(meetingType, user.token, null)
+                        }
+                    }
                 }
-
             }
         }
 
     }
 
-    private fun initiateMeeting(meetingType: String, receiverToken: String) {
+    private fun initiateMeeting(meetingType: String?, receiverToken: String?, receivers: ArrayList<User>?) {
         try {
-            val tokens = JSONArray().apply { put(receiverToken) }
+            val tokens = JSONArray()
+
+            if(receiverToken!=null){
+                tokens.put(receiverToken)
+            }
+
+            if (receivers != null && receivers.isNotEmpty()) {
+                val userNames = StringBuilder()
+                for (i in 0 until receivers.size) {
+                    tokens.put(receivers[i].token)
+                    userNames.append("${receivers[i].firstName} ${receivers[i].LastName} \n")
+                }
+                textFirstChar.visibility = View.GONE
+                textEmail.visibility = View.GONE
+                textUsername.text = userNames.toString()
+            }
+
 
             val body = JSONObject().apply {
                 val data = JSONObject().apply {
@@ -153,9 +198,19 @@ class OutgoingInvitationActivity : AppCompatActivity() {
         })
     }
 
-    private fun cancelInvitation(receiverToken: String) {
+    private fun cancelInvitation(receiverToken: String?, receivers: ArrayList<User>?) {
         try {
-            val tokens = JSONArray().apply { put(receiverToken) }
+            val tokens = JSONArray()
+
+            if(receiverToken!=null){
+                tokens.put(receiverToken)
+            }
+
+            if(receivers != null && receivers.size > 0){
+                for(user in receivers){
+                    tokens.put(user.token)
+                }
+            }
 
             val body = JSONObject().apply {
                 val data = JSONObject().apply {
@@ -206,8 +261,11 @@ class OutgoingInvitationActivity : AppCompatActivity() {
                         finish()
                     }
                 }else if(type == Constants.REMOTE_MSG_INVITATION_REJECTED){
-                    Toast.makeText(context, "Invitation REJECTED", Toast.LENGTH_SHORT).show()
-                    finish()
+                    rejectionCount += 1
+                    if(rejectionCount == totalReceivers){
+                        Toast.makeText(context, "Invitation REJECTED", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 //import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.gson.Gson
 
 
 class MainActivity : AppCompatActivity(), UsersListener {
@@ -29,12 +31,16 @@ class MainActivity : AppCompatActivity(), UsersListener {
     private lateinit var textErrorMessage: TextView
    // private lateinit var usersProgressBar: ProgressBar
    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+   private lateinit var imageConference: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         preferenceManager = PreferenceManager(applicationContext)
+
+        imageConference = findViewById(R.id.imageConference)
+
         var textTitle = findViewById<TextView>(R.id.textTitle)
         textTitle.text = String.format(
             "%s %s",
@@ -180,6 +186,21 @@ class MainActivity : AppCompatActivity(), UsersListener {
             intent.putExtra("type","audio")
             startActivity(intent)
             finish()
+        }
+    }
+
+    override fun onMultipleUserAction(isMultipleUsersSelected: Boolean) {
+        if(isMultipleUsersSelected){
+            imageConference.visibility = View.VISIBLE
+            imageConference.setOnClickListener {
+                val intent = Intent(applicationContext, OutgoingInvitationActivity::class.java)
+                intent.putExtra("selectedUsers", Gson().toJson(usersAdapters.getSelectedUsers()))
+                intent.putExtra("type", "video")
+                intent.putExtra("isMultiple", true)
+                startActivity(intent)
+            }
+        }else{
+            imageConference.visibility = View.GONE
         }
     }
 }
