@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity(), UsersListener {
 
         documentReference.update(Constants.KEY_FCM_TOKEN, token)
             .addOnSuccessListener {
-                Toast.makeText(this@MainActivity, "Token updated successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Signing in...", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this@MainActivity, "Unable to send token.${e.message}", Toast.LENGTH_SHORT).show()
